@@ -1,9 +1,14 @@
+import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
 import ProductosPage from '@/pages/ProductosPage'
+import PresupuestosPage from '@/pages/PresupuestosPage'
+import PresupuestoFormPage from '@/pages/PresupuestoFormPage'
+import VentasPage from '@/pages/VentasPage'
+import VentaFormPage from '@/pages/VentaFormPage'
 
 // App.tsx define el árbol de rutas de toda la aplicación.
 // Equivale al servlet-mapping de web.xml pero en el cliente.
@@ -22,6 +27,26 @@ function App() {
 
         <Route path="/productos" element={
           <ProtectedRoute><ProductosPage /></ProtectedRoute>
+        } />
+
+        <Route path="/presupuestos" element={
+          <ProtectedRoute><PresupuestosPage /></ProtectedRoute>
+        } />
+
+        <Route path="/presupuestos/nuevo" element={
+          <ProtectedRoute><PresupuestoFormPage /></ProtectedRoute>
+        } />
+
+        <Route path="/presupuestos/:id/editar" element={
+          <ProtectedRoute><PresupuestoFormPage /></ProtectedRoute>
+        } />
+
+        <Route path="/ventas" element={
+          <ProtectedRoute><VentasPage /></ProtectedRoute>
+        } />
+
+        <Route path="/ventas/nueva" element={
+          <ProtectedRoute><VentaFormPage /></ProtectedRoute>
         } />
 
         {/* Redirige la raíz al dashboard (o al login si no está autenticado) */}
