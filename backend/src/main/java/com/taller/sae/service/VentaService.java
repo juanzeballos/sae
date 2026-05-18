@@ -172,7 +172,9 @@ public class VentaService {
 
                 detalle.setPrecioCostoUnitario(producto.getPrecioCostoNeto());
 
-                Stock stock = stockRepository.findByProductoId(det.productoId()).get();
+                Stock stock = stockRepository.findByProductoId(det.productoId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Stock no encontrado para producto: " + det.productoId()));
                 double stockAntes = stock.getCantidadActual();
                 double stockDespues = stockAntes - det.cantidad();
                 stock.setCantidadActual(stockDespues);
