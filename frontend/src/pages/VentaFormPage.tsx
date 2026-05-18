@@ -186,7 +186,7 @@ function VentaFormPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="0">0%</SelectItem>
-                          <SelectItem value="10">10.5%</SelectItem>
+                          <SelectItem value="10.5">10.5%</SelectItem>
                           <SelectItem value="21">21%</SelectItem>
                         </SelectContent>
                       </Select>
