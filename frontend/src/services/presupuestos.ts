@@ -1,9 +1,9 @@
 import api from './api'
-import type { Presupuesto, Venta } from '@/types'
+import type { Presupuesto, Venta, TipoItem } from '@/types'
 
 export interface PresupuestoDetalleRequest {
   productoId: number | null
-  tipoItem: string
+  tipoItem: TipoItem
   descripcionItem: string
   cantidad: number
   precioUnitarioNeto: number
