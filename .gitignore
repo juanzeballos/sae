@@ -1,0 +1,28 @@
+# ── Backend ──────────────────────────────────────────────────────────────────
+backend/target/
+
+# Base de datos SQLite (se genera sola al arrancar)
+backend/data/
+
+# Eclipse IDE
+backend/.project
+backend/.settings/
+
+# Frontend compilado copiado al backend (se regenera con build.cmd)
+backend/src/main/resources/static/*
+!backend/src/main/resources/static/.gitignore
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+
+# ── Deploy / distribución ─────────────────────────────────────────────────────
+# Se genera con build.cmd
+dist-cliente/
+
+# ── Herramientas internas ─────────────────────────────────────────────────────
+.superpowers/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0
+          https://maven.apache.org/xsd/settings-1.2.0.xsd">
+
+  <!--
+    Settings Maven para el proyecto SAE (personal).
+    Separado del settings de trabajo (que apunta al Nexus de Boldt).
+
+    Uso:
+      mvn -s F:\Proyectos\sae\maven-settings.xml <comando>
+
+    Por ejemplo:
+      mvn -s F:\Proyectos\sae\maven-settings.xml compile
+      mvn -s F:\Proyectos\sae\maven-settings.xml spring-boot:run
+  -->
+
+  <!-- Repositorio local en F para no ocupar espacio en C -->
+  <localRepository>F:\maven-repo</localRepository>
+
+  <!-- Sin mirrors: descarga directo de Maven Central (internet) -->
+
+</settings>

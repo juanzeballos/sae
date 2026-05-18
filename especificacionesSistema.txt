@@ -1,0 +1,238 @@
+🧾 ESPECIFICACIÓN DEL SISTEMA – SISTEMA DE GESTIÓN
+📌 1. Descripción general
+
+Se debe desarrollar un sistema de gestión para un negocio (taller orientado a venta y servicios), que permita administrar:
+
+productos y stock
+presupuestos
+ventas
+clientes
+gastos
+facturación electrónica (AFIP)
+reportes
+
+El sistema debe ser simple, práctico y orientado al uso diario, pensado para usuarios sin conocimientos técnicos.
+
+🎯 2. Objetivo del sistema
+
+Centralizar la operación del negocio en una única herramienta que permita:
+
+controlar el stock en tiempo real
+registrar ventas y presupuestos
+gestionar clientes
+registrar gastos
+emitir facturas electrónicas
+obtener reportes básicos del negocio
+🔐 3. Autenticación (Login)
+Funcionalidades:
+Inicio de sesión con usuario y contraseña
+Cierre de sesión
+Reglas:
+El sistema requiere login para acceder
+No hay registro público de usuarios
+Los usuarios se crean manualmente
+No hay manejo de roles en esta versión
+Campos:
+usuario
+contraseña (encriptada)
+🧩 4. Módulos del sistema
+🔹 4.1 Productos y Stock
+Funcionalidades:
+Alta, baja y modificación de productos
+Campos:
+código
+nombre
+descripción
+marca
+tipo (PRODUCTO)
+Búsqueda:
+por código
+descripción
+marca
+Stock:
+visualización en tiempo real
+control automático mediante movimientos
+Reglas:
+los servicios no tienen stock
+los servicios solo se usan en presupuestos y ventas
+🔹 4.2 Presupuestos
+Funcionalidades:
+crear
+editar
+listar
+Campos:
+cliente (obligatorio: nombre, puede ser manual o existente)
+fecha
+ítems:
+producto/servicio
+cantidad
+precio
+total
+Estados:
+BORRADOR
+CONFIRMADO
+Reglas:
+no afecta stock
+puede convertirse en venta
+🔹 4.3 Ventas
+Funcionalidades:
+crear venta manual
+crear venta desde presupuesto
+listar
+Campos:
+cliente (obligatorio, puede ser manual o existente)
+fecha
+ítems (productos/servicios)
+total
+Reglas:
+solo las ventas afectan stock
+descuenta stock de productos
+no descuenta stock de servicios
+🔹 4.4 Clientes
+Funcionalidades:
+alta, baja y modificación
+búsqueda
+Campos:
+dni/cuil
+nombre
+teléfono
+observaciones
+🔹 4.5 Gastos
+Funcionalidades:
+registrar gasto
+listar gastos
+Campos:
+descripción
+monto
+fecha
+categoría (opcional)
+🔹 4.6 Facturación (AFIP)
+Funcionalidades:
+generar factura desde una venta
+obtener CAE
+Requisitos:
+integración con Web Services AFIP
+uso de certificado digital
+Reglas:
+solo se factura una venta
+la factura queda asociada a la venta
+🔹 4.7 Reportes
+Reportes:
+ventas
+gastos
+ganancias (ventas - gastos)
+por cliente
+stock
+🔁 5. Flujos principales
+🔹 Flujo 1 (principal)
+
+Producto → Presupuesto → Venta → Factura
+
+🔹 Flujo 2
+
+Ingreso manual de productos → actualización de stock
+
+🔹 Flujo 3
+
+Registro de gastos → impacto en ganancias
+
+⚙️ 6. Reglas de negocio (CRÍTICAS)
+el stock se descuenta solo en ventas
+los presupuestos no afectan stock
+los servicios no afectan stock
+la facturación se realiza desde la venta
+un presupuesto puede convertirse en venta
+una venta puede existir sin presupuesto previo
+no se permite vender productos sin stock
+🧱 7. Modelo de datos (conceptual)
+
+Entidades principales:
+
+Usuario
+Producto
+Cliente
+Presupuesto
+PresupuestoDetalle
+Venta
+VentaDetalle
+Gasto
+Stock
+Factura
+🖥️ 8. Pantallas del sistema
+Login
+Gestión de productos
+Pantalla de stock
+Presupuestos
+Ventas
+Clientes
+Gastos
+Facturación
+Reportes
+🚀 9. Fases de desarrollo (ORDEN DE IMPLEMENTACIÓN)
+🔹 Fase 1 – Base del sistema
+
+Objetivo: tener estructura mínima funcionando
+
+Incluye:
+
+Login
+Productos (ABM)
+Stock
+Búsqueda de productos
+🔹 Fase 2 – Operación principal
+
+Objetivo: registrar actividad del negocio
+
+Incluye:
+
+Presupuestos
+Ventas básicas (sin AFIP)
+Conversión presupuesto → venta
+🔹 Fase 3 – Gestión del negocio
+
+Objetivo: completar operación
+
+Incluye:
+
+Clientes
+Gastos
+🔹 Fase 4 – Facturación
+
+Objetivo: automatizar facturación
+
+Incluye:
+
+Integración AFIP
+Generación de comprobantes
+🔹 Fase 5 – Reportes
+
+Objetivo: análisis del negocio
+
+Incluye:
+
+todos los reportes
+🧠 10. Consideraciones técnicas
+Backend: Java (Spring Boot)
+Base de datos: SQLite
+Frontend: Vite + React + shadcn/ui
+Sistema de uso local (PC del negocio)
+⚠️ 11. Restricciones
+mantener simplicidad
+evitar sobreingeniería
+priorizar funcionalidad sobre estética
+sistema pensado para usuarios no técnicos
+🎯 12. Lineamientos de Usabilidad
+
+El sistema debe ser:
+
+interfaz limpia y minimalista
+botones claros y visibles
+formularios simples
+validaciones claras
+navegación intuitiva
+lenguaje simple
+feedback inmediato (errores / guardado)
+🔍 13. Casos especiales
+no se permite vender productos sin stock
+en ventas el nombre del cliente es obligatorio (aunque sea manual)
+precios editables en presupuesto y venta
