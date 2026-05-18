@@ -187,8 +187,7 @@ function PresupuestoFormPage() {
             </TableHeader>
             <TableBody>
               {items.map(item => {
-                const precioConIva = item.precioUnitarioNeto * (1 + item.alicuotaIva / 100)
-                const subtotal = item.cantidad * precioConIva
+                const subtotal = item.cantidad * item.precioUnitarioNeto
                 return (
                   <TableRow key={item.key}>
                     <TableCell>
