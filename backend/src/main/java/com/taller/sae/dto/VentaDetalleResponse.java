@@ -2,6 +2,8 @@ package com.taller.sae.dto;
 
 import com.taller.sae.entity.VentaDetalle;
 
+// precioCostoUnitario se omite intencionalmente: es un campo interno para reportes de margen,
+// no necesario en la respuesta de la API en Fase 2.
 public record VentaDetalleResponse(
         Long id,
         Long productoId,
