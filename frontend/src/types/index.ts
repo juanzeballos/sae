@@ -44,3 +44,56 @@ export type FormaPago = 'EFECTIVO' | 'TRANSFERENCIA' | 'TARJETA' | 'OTRO'
 export type TipoItem = 'PRODUCTO' | 'SERVICIO'
 export type EstadoVenta = 'ACTIVA' | 'ANULADA'
 export type EstadoPresupuesto = 'BORRADOR' | 'CONFIRMADO' | 'CONVERTIDO'
+
+export interface PresupuestoDetalle {
+  id: number
+  productoId: number | null
+  tipoItem: TipoItem
+  descripcionItem: string
+  cantidad: number
+  precioUnitarioNeto: number
+  alicuotaIva: number
+  precioUnitario: number
+  subtotalNeto: number
+  subtotal: number
+}
+
+export interface Presupuesto {
+  id: number
+  numero: string
+  clienteNombre: string
+  fecha: string
+  estado: EstadoPresupuesto
+  ventaId: number | null
+  detalles: PresupuestoDetalle[]
+  subtotalNeto: number
+  totalIva: number
+  total: number
+}
+
+export interface VentaDetalle {
+  id: number
+  productoId: number | null
+  tipoItem: TipoItem
+  descripcionItem: string
+  cantidad: number
+  precioUnitarioNeto: number
+  alicuotaIva: number
+  precioUnitario: number
+  subtotalNeto: number
+  subtotal: number
+}
+
+export interface Venta {
+  id: number
+  numero: string
+  clienteNombre: string
+  presupuestoId: number | null
+  fecha: string
+  estado: EstadoVenta
+  formaPago: string
+  detalles: VentaDetalle[]
+  subtotalNeto: number
+  totalIva: number
+  total: number
+}
