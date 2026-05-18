@@ -117,7 +117,7 @@ function PresupuestoFormPage() {
       clienteNombre,
       fecha,
       detalles: items.map(item => ({
-        productoId: item.productoId,
+        productoId: item.productoId ?? null,
         tipoItem: item.tipoItem,
         descripcionItem: item.descripcionItem,
         cantidad: item.cantidad,
