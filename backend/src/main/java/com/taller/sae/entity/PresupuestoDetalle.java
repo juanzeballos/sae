@@ -18,6 +18,7 @@ public class PresupuestoDetalle {
     @JoinColumn(name = "presupuesto_id", nullable = false)
     private Presupuesto presupuesto;
 
+    // Null cuando tipoItem = SERVICIO (servicio manual sin producto del catálogo)
     @Column(name = "producto_id")
     private Long productoId;
 
@@ -34,7 +35,7 @@ public class PresupuestoDetalle {
     private Double precioUnitarioNeto;
 
     @Column(name = "alicuota_iva", nullable = false)
-    private Integer alicuotaIva;
+    private Integer alicuotaIva = 21;
 
     @Column(name = "precio_unitario", nullable = false)
     private Double precioUnitario;
