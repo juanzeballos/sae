@@ -2,6 +2,7 @@ package com.taller.sae.controller;
 
 import com.taller.sae.dto.PresupuestoRequest;
 import com.taller.sae.dto.PresupuestoResponse;
+import com.taller.sae.dto.VentaRequest;
 import com.taller.sae.dto.VentaResponse;
 import com.taller.sae.service.PresupuestoService;
 import jakarta.validation.Valid;
@@ -53,7 +54,8 @@ public class PresupuestoController {
 
     @PostMapping("/{id}/convertir")
     @ResponseStatus(HttpStatus.CREATED)
-    public VentaResponse convertir(@PathVariable Long id) {
-        return presupuestoService.convertir(id);
+    public VentaResponse convertir(@PathVariable Long id,
+                                   @RequestBody(required = false) VentaRequest ventaRequest) {
+        return presupuestoService.convertir(id, ventaRequest);
     }
 }

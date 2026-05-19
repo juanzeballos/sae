@@ -122,7 +122,7 @@ public class PresupuestoService {
     // ─── Convertir a venta ───────────────────────────────────────────────────
 
     @Transactional
-    public VentaResponse convertir(Long id) {
+    public VentaResponse convertir(Long id, VentaRequest ventaRequestBody) {
         Presupuesto presupuesto = buscarOLanzar(id);
 
         if (!"CONFIRMADO".equals(presupuesto.getEstado())) {
@@ -130,24 +130,27 @@ public class PresupuestoService {
                     "Solo se puede convertir un presupuesto CONFIRMADO");
         }
 
-        List<PresupuestoDetalle> detalles = presupuestoDetalleRepository.findByPresupuestoId(id);
-
-        List<VentaDetalleRequest> detalleRequests = detalles.stream()
-                .map(d -> new VentaDetalleRequest(
-                        d.getProductoId(),
-                        d.getTipoItem(),
-                        d.getDescripcionItem(),
-                        d.getCantidad(),
-                        d.getPrecioUnitarioNeto(),
-                        d.getAlicuotaIva()
-                ))
-                .toList();
-
-        VentaRequest ventaRequest = new VentaRequest(
-                presupuesto.getClienteNombre(),
-                presupuesto.getFecha(),
-                detalleRequests
-        );
+        VentaRequest ventaRequest;
+        if (ventaRequestBody != null) {
+            ventaRequest = ventaRequestBody;
+        } else {
+            List<PresupuestoDetalle> detalles = presupuestoDetalleRepository.findByPresupuestoId(id);
+            List<VentaDetalleRequest> detalleRequests = detalles.stream()
+                    .map(d -> new VentaDetalleRequest(
+                            d.getProductoId(),
+                            d.getTipoItem(),
+                            d.getDescripcionItem(),
+                            d.getCantidad(),
+                            d.getPrecioUnitarioNeto(),
+                            d.getAlicuotaIva()
+                    ))
+                    .toList();
+            ventaRequest = new VentaRequest(
+                    presupuesto.getClienteNombre(),
+                    presupuesto.getFecha(),
+                    detalleRequests
+            );
+        }
 
         VentaResponse ventaResponse = ventaService.crearDesdePresupuesto(ventaRequest, presupuesto.getId());
 
