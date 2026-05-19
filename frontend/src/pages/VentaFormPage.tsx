@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import AppLayout from '@/components/layout/AppLayout'
 import { ProductoSelectorModal } from '@/components/presupuestos/ProductoSelectorModal'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,8 @@ import {
 } from '@/components/ui/table'
 import { useToast } from '@/hooks/use-toast'
 import { ventasService } from '@/services/ventas'
-import type { Producto } from '@/types'
+import { presupuestosService } from '@/services/presupuestos'
+import type { Producto, Presupuesto } from '@/types'
 import { Trash2, Plus } from 'lucide-react'
 
 interface ItemRow {
@@ -39,11 +40,30 @@ function nuevaFila(): ItemRow {
 
 function VentaFormPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { toast } = useToast()
 
-  const [clienteNombre, setClienteNombre] = useState('')
-  const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0])
-  const [items, setItems] = useState<ItemRow[]>([])
+  const fromPresupuesto = (location.state as { fromPresupuesto?: Presupuesto } | null)
+    ?.fromPresupuesto ?? null
+
+  const [clienteNombre, setClienteNombre] = useState(fromPresupuesto?.clienteNombre ?? '')
+  const [clienteTelefono, setClienteTelefono] = useState('')
+  const [fecha, setFecha] = useState(
+    fromPresupuesto?.fecha ?? new Date().toISOString().split('T')[0]
+  )
+  const [items, setItems] = useState<ItemRow[]>(() =>
+    fromPresupuesto
+      ? fromPresupuesto.detalles.map(d => ({
+          key: String(d.id),
+          productoId: d.productoId ?? undefined,
+          tipoItem: d.tipoItem,
+          descripcionItem: d.descripcionItem,
+          cantidad: d.cantidad,
+          precioUnitarioNeto: d.precioUnitarioNeto,
+          alicuotaIva: d.alicuotaIva,
+        }))
+      : []
+  )
   const [selectorOpen, setSelectorOpen] = useState(false)
   const [saving, setSaving] = useState(false)
 
@@ -87,21 +107,28 @@ function VentaFormPage() {
       return
     }
 
+    const ventaRequest = {
+      clienteNombre,
+      fecha,
+      detalles: items.map(item => ({
+        productoId: item.productoId ?? null,
+        tipoItem: item.tipoItem,
+        descripcionItem: item.descripcionItem,
+        cantidad: item.cantidad,
+        precioUnitarioNeto: item.precioUnitarioNeto,
+        alicuotaIva: item.alicuotaIva,
+      })),
+    }
+
     setSaving(true)
     try {
-      const venta = await ventasService.crear({
-        clienteNombre,
-        fecha,
-        detalles: items.map(item => ({
-          productoId: item.productoId ?? null,
-          tipoItem: item.tipoItem,
-          descripcionItem: item.descripcionItem,
-          cantidad: item.cantidad,
-          precioUnitarioNeto: item.precioUnitarioNeto,
-          alicuotaIva: item.alicuotaIva,
-        })),
-      })
-      toast({ title: `Venta #${venta.numero} registrada` })
+      if (fromPresupuesto) {
+        const venta = await presupuestosService.convertirConDatos(fromPresupuesto.id, ventaRequest)
+        toast({ title: `Venta #${venta.numero} creada — Presupuesto #${fromPresupuesto.numero} convertido` })
+      } else {
+        const venta = await ventasService.crear(ventaRequest)
+        toast({ title: `Venta #${venta.numero} registrada` })
+      }
       navigate('/ventas')
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })
@@ -115,23 +142,31 @@ function VentaFormPage() {
   return (
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
-        <h1 className="text-2xl font-semibold mb-6">Nueva venta</h1>
+        <h1 className="text-2xl font-semibold mb-6">
+          {fromPresupuesto
+            ? `Venta desde Presupuesto #${fromPresupuesto.numero}`
+            : 'Nueva venta'}
+        </h1>
 
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div>
-            <Label>Nro</Label>
-            <Input value="Automático" readOnly className="bg-slate-100" />
-          </div>
-          <div>
-            <Label>Fecha</Label>
-            <Input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
-          </div>
           <div>
             <Label>Cliente *</Label>
             <Input
               placeholder="Nombre del cliente"
               value={clienteNombre}
               onChange={e => setClienteNombre(e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>Fecha</Label>
+            <Input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
+          </div>
+          <div>
+            <Label>Teléfono <span className="text-slate-400 text-xs">(opcional)</span></Label>
+            <Input
+              placeholder="Teléfono del cliente"
+              value={clienteTelefono}
+              onChange={e => setClienteTelefono(e.target.value)}
             />
           </div>
         </div>
@@ -144,13 +179,13 @@ function VentaFormPage() {
                 <TableHead className="w-24">Cant.</TableHead>
                 <TableHead className="w-36">Precio neto</TableHead>
                 <TableHead className="w-24">IVA %</TableHead>
-                <TableHead className="w-32 text-right">Subtotal</TableHead>
+                <TableHead className="w-32 text-right">Subtotal c/IVA</TableHead>
                 <TableHead className="w-10"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map(item => {
-                const subtotal = item.cantidad * item.precioUnitarioNeto
+                const subtotal = item.cantidad * item.precioUnitarioNeto * (1 + item.alicuotaIva / 100)
                 return (
                   <TableRow key={item.key}>
                     <TableCell>
@@ -184,7 +219,7 @@ function VentaFormPage() {
                         <SelectTrigger className="h-8">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white">
                           <SelectItem value="0">0%</SelectItem>
                           <SelectItem value="10.5">10.5%</SelectItem>
                           <SelectItem value="21">21%</SelectItem>
@@ -214,10 +249,10 @@ function VentaFormPage() {
         </div>
 
         <div className="flex gap-2 mb-6">
-          <Button variant="outline" size="sm" onClick={() => setSelectorOpen(true)}>
+          <Button variant="outline" size="sm" className="border-slate-600" onClick={() => setSelectorOpen(true)}>
             <Plus className="h-4 w-4 mr-1" /> Producto
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setItems(prev => [...prev, nuevaFila()])}>
+          <Button variant="outline" size="sm" className="border-slate-600" onClick={() => setItems(prev => [...prev, nuevaFila()])}>
             <Plus className="h-4 w-4 mr-1" /> Servicio
           </Button>
         </div>
@@ -240,11 +275,14 @@ function VentaFormPage() {
         </div>
 
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={() => navigate('/ventas')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate(fromPresupuesto ? '/presupuestos' : '/ventas')}
+          >
             Cancelar
           </Button>
           <Button onClick={handleRegistrar} disabled={saving}>
-            Registrar venta
+            {fromPresupuesto ? 'Confirmar venta' : 'Registrar venta'}
           </Button>
         </div>
       </div>
