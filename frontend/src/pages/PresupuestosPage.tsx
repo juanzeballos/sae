@@ -46,7 +46,7 @@ function PresupuestosPage() {
       .filter(p => {
         if (!busqueda) return true
         const q = busqueda.toLowerCase()
-        return p.clienteNombre.toLowerCase().includes(q) || p.numero.includes(q)
+        return p.clienteNombre.toLowerCase().includes(q) || p.numero.includes(q) || p.fecha.includes(q)
       }),
     [presupuestos, busqueda, filtroEstado]
   )
@@ -61,16 +61,6 @@ function PresupuestosPage() {
       const actualizado = await presupuestosService.confirmar(id)
       setPresupuestos(prev => prev.map(p => p.id === id ? { ...p, estado: actualizado.estado } : p))
       toast({ title: 'Presupuesto confirmado' })
-    } catch (err) {
-      toast({ title: errMsg(err), variant: 'destructive' })
-    }
-  }
-
-  async function handleConvertir(id: number) {
-    try {
-      const venta = await presupuestosService.convertir(id)
-      await cargar()
-      toast({ title: `Venta #${venta.numero} creada` })
     } catch (err) {
       toast({ title: errMsg(err), variant: 'destructive' })
     }
@@ -100,10 +90,10 @@ function PresupuestosPage() {
 
         <div className="flex gap-3 mb-4">
           <Input
-            placeholder="Buscar por cliente o número..."
+            placeholder="Buscar por cliente, número o fecha..."
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
-            className="max-w-sm"
+            className="max-w-sm border-slate-500"
           />
           <Select
             value={filtroEstado}
@@ -112,7 +102,7 @@ function PresupuestosPage() {
             <SelectTrigger className="w-44">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="TODOS">Todos los estados</SelectItem>
               <SelectItem value="BORRADOR">Borrador</SelectItem>
               <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
@@ -151,20 +141,24 @@ function PresupuestosPage() {
                     <div className="flex justify-end gap-1">
                       {p.estado === 'BORRADOR' && (
                         <>
-                          <Button size="sm" variant="ghost"
+                          <Button size="sm" variant="ghost" title="Editar"
                             onClick={() => navigate(`/presupuestos/${p.id}/editar`)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleConfirmar(p.id)}>
+                          <Button size="sm" variant="ghost" title="Confirmar" onClick={() => handleConfirmar(p.id)}>
                             <CheckCircle className="h-4 w-4 text-blue-600" />
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleEliminar(p.id)}>
+                          <Button size="sm" variant="ghost" title="Eliminar" onClick={() => handleEliminar(p.id)}>
                             <Trash2 className="h-4 w-4 text-red-500" />
                           </Button>
                         </>
                       )}
                       {p.estado === 'CONFIRMADO' && (
-                        <Button size="sm" variant="outline" onClick={() => handleConvertir(p.id)}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => navigate('/ventas/nueva', { state: { fromPresupuesto: p } })}
+                        >
                           <ArrowRightCircle className="h-4 w-4 mr-1 text-green-600" />
                           Convertir a venta
                         </Button>
