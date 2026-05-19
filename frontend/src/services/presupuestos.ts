@@ -1,5 +1,6 @@
 import api from './api'
 import type { Presupuesto, Venta, TipoItem } from '@/types'
+import type { VentaRequest } from './ventas'
 
 export interface PresupuestoDetalleRequest {
   productoId: number | null
@@ -37,4 +38,7 @@ export const presupuestosService = {
 
   convertir: (id: number) =>
     api.post<Venta>(`/presupuestos/${id}/convertir`).then(r => r.data),
+
+  convertirConDatos: (id: number, ventaRequest: VentaRequest) =>
+    api.post<Venta>(`/presupuestos/${id}/convertir`, ventaRequest).then(r => r.data),
 }
