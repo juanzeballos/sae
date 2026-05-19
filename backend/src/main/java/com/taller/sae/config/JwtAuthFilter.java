@@ -1,11 +1,13 @@
 package com.taller.sae.config;
 
 import com.taller.sae.service.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +29,7 @@ import java.io.IOException;
 //   5. Continuar con el resto de la cadena de filtros
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -50,7 +53,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Extraemos el token: "Bearer eyJhbGci..." → "eyJhbGci..."
         String token = authHeader.substring(7);
 
-        String username = jwtService.extractUsername(token);
+        String username;
+        try {
+            username = jwtService.extractUsername(token);
+        } catch (JwtException e) {
+            log.warn("JWT malformado en {} {}: {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // Solo procesamos si hay username Y todavía no hay una autenticación en el contexto
         // (evitamos re-autenticar en el mismo request)
@@ -67,7 +77,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                log.warn("JWT inválido o expirado para usuario '{}' en {} {}",
+                        username, request.getMethod(), request.getRequestURI());
             }
+        } else if (username == null) {
+            log.warn("JWT sin campo 'sub' en {} {}", request.getMethod(), request.getRequestURI());
         }
 
         filterChain.doFilter(request, response);

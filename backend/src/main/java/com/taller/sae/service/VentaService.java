@@ -113,8 +113,8 @@ public class VentaService {
                                     "Producto no encontrado: " + det.productoId()));
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                             "Stock insuficiente para: " + p.getNombre()
-                                    + ". Disponible: " + stock.getCantidadActual()
-                                    + ", Requerido: " + det.cantidad());
+                                    + ". Disponible: " + stock.getCantidadActual().intValue()
+                                    + ", Requerido: " + det.cantidad().intValue());
                 }
             }
         }

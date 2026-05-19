@@ -51,9 +51,12 @@ public class SecurityConfig {
 
                 // Reglas de acceso:
                 //   /auth/** = público (login no requiere token)
+                //   /error   = público (Tomcat re-despacha errores 4xx/5xx a /error sin
+                //              el header Authorization; si lo bloqueamos, todos los errores
+                //              del backend devuelven 401 en lugar del código real)
                 //   cualquier otra URL = requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
 
