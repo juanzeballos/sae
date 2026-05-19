@@ -45,7 +45,7 @@ function VentasPage() {
       .filter(v => {
         if (!busqueda) return true
         const q = busqueda.toLowerCase()
-        return v.clienteNombre.toLowerCase().includes(q) || v.numero.includes(q)
+        return v.clienteNombre.toLowerCase().includes(q) || v.numero.includes(q) || v.fecha.includes(q)
       }),
     [ventas, busqueda, filtroEstado]
   )
@@ -76,7 +76,7 @@ function VentasPage() {
 
         <div className="flex gap-3 mb-4">
           <Input
-            placeholder="Buscar por cliente o número..."
+            placeholder="Buscar por cliente, número o fecha..."
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
             className="max-w-sm"
@@ -88,7 +88,7 @@ function VentasPage() {
             <SelectTrigger className="w-44">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="TODOS">Todos los estados</SelectItem>
               <SelectItem value="ACTIVA">Activa</SelectItem>
               <SelectItem value="ANULADA">Anulada</SelectItem>

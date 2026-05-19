@@ -44,6 +44,7 @@ function PresupuestoFormPage() {
   const isEdit = !!id
 
   const [clienteNombre, setClienteNombre] = useState('')
+  const [clienteTelefono, setClienteTelefono] = useState('')
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0])
   const [items, setItems] = useState<ItemRow[]>([])
   const [numero, setNumero] = useState<string | null>(null)
@@ -156,19 +157,23 @@ function PresupuestoFormPage() {
 
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div>
-            <Label>Nro</Label>
-            <Input value={numero ?? 'Automático'} readOnly className="bg-slate-100" />
+            <Label>Cliente *</Label>
+            <Input
+              placeholder="Nombre del cliente"
+              value={clienteNombre}
+              onChange={e => setClienteNombre(e.target.value)}
+            />
           </div>
           <div>
             <Label>Fecha</Label>
             <Input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
           </div>
           <div>
-            <Label>Cliente *</Label>
+            <Label>Teléfono (opcional)</Label>
             <Input
-              placeholder="Nombre del cliente"
-              value={clienteNombre}
-              onChange={e => setClienteNombre(e.target.value)}
+              placeholder="Teléfono del cliente"
+              value={clienteTelefono}
+              onChange={e => setClienteTelefono(e.target.value)}
             />
           </div>
         </div>
@@ -181,13 +186,13 @@ function PresupuestoFormPage() {
                 <TableHead className="w-24">Cant.</TableHead>
                 <TableHead className="w-36">Precio neto</TableHead>
                 <TableHead className="w-24">IVA %</TableHead>
-                <TableHead className="w-32 text-right">Subtotal</TableHead>
+                <TableHead className="w-32 text-right">Subtotal c/IVA</TableHead>
                 <TableHead className="w-10"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map(item => {
-                const subtotal = item.cantidad * item.precioUnitarioNeto
+                const subtotal = item.cantidad * item.precioUnitarioNeto * (1 + item.alicuotaIva / 100)
                 return (
                   <TableRow key={item.key}>
                     <TableCell>
@@ -221,7 +226,7 @@ function PresupuestoFormPage() {
                         <SelectTrigger className="h-8">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white">
                           <SelectItem value="0">0%</SelectItem>
                           <SelectItem value="10.5">10.5%</SelectItem>
                           <SelectItem value="21">21%</SelectItem>
@@ -251,10 +256,10 @@ function PresupuestoFormPage() {
         </div>
 
         <div className="flex gap-2 mb-6">
-          <Button variant="outline" size="sm" onClick={() => setSelectorOpen(true)}>
+          <Button variant="outline" size="sm" className="border-slate-600" onClick={() => setSelectorOpen(true)}>
             <Plus className="h-4 w-4 mr-1" /> Producto
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setItems(prev => [...prev, nuevaFila()])}>
+          <Button variant="outline" size="sm" className="border-slate-600" onClick={() => setItems(prev => [...prev, nuevaFila()])}>
             <Plus className="h-4 w-4 mr-1" /> Servicio
           </Button>
         </div>

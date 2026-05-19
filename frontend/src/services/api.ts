@@ -33,6 +33,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      console.error('[SAE] 401 en:', error.config?.method?.toUpperCase(), error.config?.url, error.response?.data)
       localStorage.removeItem('sae_token')
       localStorage.removeItem('sae_username')
       window.location.href = '/login'
