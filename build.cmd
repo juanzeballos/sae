@@ -48,6 +48,7 @@ if errorlevel 1 (
 echo.
 echo [4/4] Armando paquete para el cliente...
 set DIST=%ROOT%dist-cliente
+set JRE_SRC=F:\descargas\jdk-17.0.19+10-jre
 if exist "%DIST%" rmdir /s /q "%DIST%"
 mkdir "%DIST%"
 copy /y "%ROOT%backend\target\sae-0.0.1-SNAPSHOT.jar" "%DIST%\sae.jar" >nul
@@ -55,6 +56,8 @@ copy /y "%ROOT%deploy\start-sae.vbs"   "%DIST%\start-sae.vbs"   >nul
 copy /y "%ROOT%deploy\abrir-sae.vbs"   "%DIST%\abrir-sae.vbs"   >nul
 copy /y "%ROOT%deploy\install.cmd"     "%DIST%\install.cmd"     >nul
 copy /y "%ROOT%deploy\desinstalar.cmd" "%DIST%\desinstalar.cmd" >nul
+echo     Copiando JRE (puede tardar)...
+xcopy /e /i /q "%JRE_SRC%" "%DIST%\jre" >nul
 echo     OK - carpeta dist-cliente\ lista
 
 echo.

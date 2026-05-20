@@ -24,6 +24,8 @@ echo [2/4] Copiando archivos...
 copy /y "%~dp0sae.jar" "C:\SAE\sae.jar" >nul
 copy /y "%~dp0start-sae.vbs" "C:\SAE\start-sae.vbs" >nul
 copy /y "%~dp0abrir-sae.vbs" "C:\SAE\abrir-sae.vbs" >nul
+echo     Copiando JRE (puede tardar unos segundos)...
+xcopy /e /i /q "%~dp0jre" "C:\SAE\jre" >nul
 echo     OK
 
 :: 3. Registrar tarea en Task Scheduler (arranca el JAR al encender la PC)
