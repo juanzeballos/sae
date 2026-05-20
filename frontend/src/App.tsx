@@ -4,6 +4,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
 import ProductosPage from '@/pages/ProductosPage'
+import ClientesPage from '@/pages/ClientesPage'
 import PresupuestosPage from '@/pages/PresupuestosPage'
 import PresupuestoFormPage from '@/pages/PresupuestoFormPage'
 import VentasPage from '@/pages/VentasPage'
@@ -26,6 +27,10 @@ function App() {
 
         <Route path="/productos" element={
           <ProtectedRoute><ProductosPage /></ProtectedRoute>
+        } />
+
+        <Route path="/clientes" element={
+          <ProtectedRoute><ClientesPage /></ProtectedRoute>
         } />
 
         <Route path="/presupuestos" element={
