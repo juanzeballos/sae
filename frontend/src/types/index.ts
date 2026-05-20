@@ -95,3 +95,13 @@ export interface Venta {
   totalIva: number
   total: number
 }
+
+export type CategoriaGasto = 'MATERIALES' | 'SERVICIOS' | 'IMPUESTOS' | 'SUELDOS' | 'OTROS'
+
+export interface Gasto {
+  id: number
+  fecha: string
+  descripcion: string
+  monto: number
+  categoria: CategoriaGasto
+}
