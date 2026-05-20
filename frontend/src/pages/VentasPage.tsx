@@ -12,7 +12,8 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { ventasService } from '@/services/ventas'
 import type { Venta, EstadoVenta } from '@/types'
-import { Plus, Ban } from 'lucide-react'
+import { Plus, Ban, FileDown } from 'lucide-react'
+import { generarPdfVenta } from '@/utils/generarPdf'
 
 const BADGE: Record<EstadoVenta, string> = {
   ACTIVA: 'bg-green-100 text-green-700',
@@ -134,10 +135,16 @@ function VentasPage() {
                   <TableCell className="text-right font-mono">${v.total.toFixed(2)}</TableCell>
                   <TableCell className="text-right">
                     {v.estado === 'ACTIVA' && (
-                      <Button size="sm" variant="ghost" onClick={() => handleAnular(v.id)}
-                        title="Anular venta">
-                        <Ban className="h-4 w-4 text-red-500" />
-                      </Button>
+                      <div className="flex justify-end gap-1">
+                        <Button size="sm" variant="ghost" title="Descargar PDF"
+                          onClick={() => generarPdfVenta(v)}>
+                          <FileDown className="h-4 w-4 text-slate-500" />
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => handleAnular(v.id)}
+                          title="Anular venta">
+                          <Ban className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
                     )}
                   </TableCell>
                 </TableRow>
