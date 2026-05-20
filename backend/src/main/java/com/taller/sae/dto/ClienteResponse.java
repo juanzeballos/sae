@@ -8,7 +8,8 @@ public record ClienteResponse(
     String telefono,
     String email,
     String direccion,
-    String fechaAlta
+    String fechaAlta,
+    boolean activo
 ) {
     public static ClienteResponse from(Cliente c) {
         return new ClienteResponse(
@@ -17,7 +18,8 @@ public record ClienteResponse(
             c.getTelefono(),
             c.getEmail(),
             c.getDireccion(),
-            c.getFechaAlta()
+            c.getFechaAlta(),
+            c.isActivo()
         );
     }
 }
