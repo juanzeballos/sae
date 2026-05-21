@@ -48,17 +48,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- SQLite: el driver JDBC para la base de datos -->
+        <!-- PostgreSQL: el driver JDBC para la base de datos -->
         <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.45.1.0</version>
-        </dependency>
-
-        <!-- Hibernate Community Dialects: necesario para que Hibernate entienda SQLite -->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-community-dialects</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Flyway: gestión de migraciones de base de datos -->
