@@ -57,7 +57,7 @@ public class SecurityConfig {
                 //   cualquier otra URL = requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/error").permitAll()
-                        .requestMatchers("/", "/index.html", "/assets/**", "/*.js", "/*.css", "/*.ico", "/*.png", "/*.svg").permitAll()
+                        .requestMatchers("/", "/index.html", "/assets/**", "/assets/*", "/*.js", "/*.css", "/*.ico", "/*.png", "/*.svg").permitAll()
                         .anyRequest().authenticated()
                 )
 
