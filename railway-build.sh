@@ -20,4 +20,5 @@ cp -r frontend/dist/* backend/src/main/resources/static/
 
 # Build backend
 cd backend
+chmod +x mvnw
 ./mvnw clean package -DskipTests
