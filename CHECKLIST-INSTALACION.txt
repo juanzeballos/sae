@@ -1,0 +1,61 @@
+============================================================
+ SAE - Checklist de instalacion en PC del cliente
+============================================================
+
+ANTES DE ABRIR EL NAVEGADOR, verificar que esto este en orden:
+
+------------------------------------------------------------
+1. VERIFICAR QUE C:\SAE\ EXISTE Y TIENE LOS ARCHIVOS
+------------------------------------------------------------
+Abrir el Explorador de Windows y navegar a C:\SAE\
+Tiene que haber:
+  - sae.jar
+  - start-sae.vbs
+  - abrir-sae.vbs
+  - jre\  (carpeta con el Java incluido)
+
+Si C:\SAE\ no existe o le faltan archivos -> ver punto 2.
+
+------------------------------------------------------------
+2. COPIAR A MANO (si el instalador fallo)
+------------------------------------------------------------
+a) Crear la carpeta C:\SAE\ si no existe
+
+b) Copiar desde la carpeta del ZIP descomprimido a C:\SAE\:
+   - sae.jar
+   - start-sae.vbs
+   - abrir-sae.vbs
+   - la carpeta jre\ completa
+
+c) Abrir CMD como Administrador y ejecutar:
+
+   schtasks /delete /tn "SAE Taller" /f
+   schtasks /create /tn "SAE Taller" /tr "wscript.exe \"C:\SAE\start-sae.vbs\"" /sc onstart /ru SYSTEM /rl HIGHEST /f
+
+d) Copiar abrir-sae.vbs a la carpeta de Inicio:
+   Origen:  C:\SAE\abrir-sae.vbs
+   Destino: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\abrir-sae.vbs
+
+------------------------------------------------------------
+3. PROBAR QUE FUNCIONA
+------------------------------------------------------------
+a) Abrir CMD como Administrador y ejecutar:
+   C:\SAE\jre\bin\java.exe -jar C:\SAE\sae.jar
+
+b) Esperar ~30 segundos hasta ver "Started SaeApplication"
+
+c) Abrir el navegador y entrar a:
+   http://localhost:8080
+
+d) Tiene que aparecer la pantalla de login de SAE.
+
+Si funciona -> cerrar el CMD (el JAR se va a cerrar tambien)
+              y reiniciar la PC para que el autoarranque quede activo.
+
+------------------------------------------------------------
+4. USUARIO Y CONTRASENA POR DEFECTO
+------------------------------------------------------------
+  Usuario:    admin
+  Contrasena: admin123
+
+============================================================

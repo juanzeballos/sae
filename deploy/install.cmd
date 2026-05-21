@@ -21,11 +21,31 @@ if not exist "C:\SAE" mkdir "C:\SAE"
 
 :: 2. Copiar archivos
 echo [2/4] Copiando archivos...
-copy /y "%~dp0sae.jar" "C:\SAE\sae.jar" >nul
-copy /y "%~dp0start-sae.vbs" "C:\SAE\start-sae.vbs" >nul
-copy /y "%~dp0abrir-sae.vbs" "C:\SAE\abrir-sae.vbs" >nul
+copy /y "%~dp0sae.jar" "C:\SAE\sae.jar"
+if errorlevel 1 (
+    echo ERROR: No se pudo copiar sae.jar. Verifica que el archivo existe en la misma carpeta que install.cmd.
+    pause
+    exit /b 1
+)
+copy /y "%~dp0start-sae.vbs" "C:\SAE\start-sae.vbs"
+if errorlevel 1 (
+    echo ERROR: No se pudo copiar start-sae.vbs.
+    pause
+    exit /b 1
+)
+copy /y "%~dp0abrir-sae.vbs" "C:\SAE\abrir-sae.vbs"
+if errorlevel 1 (
+    echo ERROR: No se pudo copiar abrir-sae.vbs.
+    pause
+    exit /b 1
+)
 echo     Copiando JRE (puede tardar unos segundos)...
-xcopy /e /i /q "%~dp0jre" "C:\SAE\jre" >nul
+xcopy /e /i /q "%~dp0jre" "C:\SAE\jre"
+if errorlevel 1 (
+    echo ERROR: No se pudo copiar el JRE.
+    pause
+    exit /b 1
+)
 echo     OK
 
 :: 3. Registrar tarea en Task Scheduler (arranca el JAR al encender la PC)
