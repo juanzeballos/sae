@@ -20,4 +20,4 @@ cp -r frontend/dist/* backend/src/main/resources/static/
 
 # Build backend
 cd backend
-mvn clean package -DskipTests
+./mvnw clean package -DskipTests
