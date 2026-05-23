@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import LoginPage from '@/pages/LoginPage'
@@ -12,11 +12,17 @@ import VentaFormPage from '@/pages/VentaFormPage'
 // App.tsx define el árbol de rutas de toda la aplicación.
 // Equivale al servlet-mapping de web.xml pero en el cliente.
 //
+// Usamos HashRouter en lugar de BrowserRouter porque el frontend y el backend
+// comparten el puerto 8080 en produccion, y varias rutas del frontend
+// (/productos, /ventas, /presupuestos) colisionan con los RestController del
+// backend. Con HashRouter las URLs son /#/productos en lugar de /productos,
+// asi el server siempre ve solo "/" y sirve index.html sin conflictos.
+//
 // Rutas públicas:  /login  → no requieren token
 // Rutas privadas:  todo lo demás → ProtectedRoute redirige al login si no hay token
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 
@@ -54,7 +60,7 @@ function App() {
 
       {/* Toaster: el contenedor global de notificaciones toast (esquina inferior derecha) */}
       <Toaster />
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

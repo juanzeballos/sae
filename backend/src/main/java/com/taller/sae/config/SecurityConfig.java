@@ -54,8 +54,12 @@ public class SecurityConfig {
                 //   /error   = público (Tomcat re-despacha errores 4xx/5xx a /error sin
                 //              el header Authorization; si lo bloqueamos, todos los errores
                 //              del backend devuelven 401 en lugar del código real)
+                //   recursos estaticos del SPA (index.html, favicons, assets/**) = públicos
+                //              para que el browser pueda cargar la pagina antes de loguearse
                 //   cualquier otra URL = requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/index.html", "/assets/**",
+                                         "/favicon.svg", "/icons.svg", "/vite.svg").permitAll()
                         .requestMatchers("/auth/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )

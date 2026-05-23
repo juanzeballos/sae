@@ -14,10 +14,11 @@ echo ============================================================
 echo  SAE - Instalacion
 echo ============================================================
 
-:: 1. Crear carpeta de instalacion
+:: 1. Crear carpetas de instalacion
 echo.
-echo [1/4] Creando carpeta C:\SAE...
+echo [1/4] Creando carpetas C:\SAE y C:\SAE\data...
 if not exist "C:\SAE" mkdir "C:\SAE"
+if not exist "C:\SAE\data" mkdir "C:\SAE\data"
 
 :: 2. Copiar archivos
 echo [2/4] Copiando archivos...
