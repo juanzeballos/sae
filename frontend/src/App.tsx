@@ -4,10 +4,12 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
 import ProductosPage from '@/pages/ProductosPage'
+import ClientesPage from '@/pages/ClientesPage'
 import PresupuestosPage from '@/pages/PresupuestosPage'
 import PresupuestoFormPage from '@/pages/PresupuestoFormPage'
 import VentasPage from '@/pages/VentasPage'
 import VentaFormPage from '@/pages/VentaFormPage'
+import GastosPage from '@/pages/GastosPage'
 
 // App.tsx define el árbol de rutas de toda la aplicación.
 // Equivale al servlet-mapping de web.xml pero en el cliente.
@@ -34,6 +36,10 @@ function App() {
           <ProtectedRoute><ProductosPage /></ProtectedRoute>
         } />
 
+        <Route path="/clientes" element={
+          <ProtectedRoute><ClientesPage /></ProtectedRoute>
+        } />
+
         <Route path="/presupuestos" element={
           <ProtectedRoute><PresupuestosPage /></ProtectedRoute>
         } />
@@ -52,6 +58,10 @@ function App() {
 
         <Route path="/ventas/nueva" element={
           <ProtectedRoute><VentaFormPage /></ProtectedRoute>
+        } />
+
+        <Route path="/gastos" element={
+          <ProtectedRoute><GastosPage /></ProtectedRoute>
         } />
 
         {/* Redirige la raíz al dashboard (o al login si no está autenticado) */}

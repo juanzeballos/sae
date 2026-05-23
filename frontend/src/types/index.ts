@@ -31,12 +31,10 @@ export interface Producto {
 export interface Cliente {
   id: number
   nombre: string
-  apellido: string
-  dniCuil?: string
   telefono?: string
-  razonSocial?: string
-  condicionFiscal?: 'CONSUMIDOR_FINAL' | 'RESPONSABLE_INSCRIPTO' | 'MONOTRIBUTISTA' | 'EXENTO'
-  observaciones?: string
+  email?: string
+  direccion?: string
+  fechaAlta?: string
   activo: boolean
 }
 
@@ -96,4 +94,14 @@ export interface Venta {
   subtotalNeto: number
   totalIva: number
   total: number
+}
+
+export type CategoriaGasto = 'MATERIALES' | 'SERVICIOS' | 'IMPUESTOS' | 'SUELDOS' | 'OTROS'
+
+export interface Gasto {
+  id: number
+  fecha: string
+  descripcion: string
+  monto: number
+  categoria: CategoriaGasto
 }

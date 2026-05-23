@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Package, LayoutDashboard, LogOut, FileText, ShoppingCart } from 'lucide-react'
+import { Package, LayoutDashboard, LogOut, FileText, ShoppingCart, Users, Receipt } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/hooks/useAuth'
@@ -7,8 +7,10 @@ import { useAuth } from '@/hooks/useAuth'
 const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/productos', label: 'Productos', icon: Package },
+  { path: '/clientes', label: 'Clientes', icon: Users },
   { path: '/presupuestos', label: 'Presupuestos', icon: FileText },
   { path: '/ventas', label: 'Ventas', icon: ShoppingCart },
+  { path: '/gastos', label: 'Gastos', icon: Receipt },
 ]
 
 function AppLayout({ children }: { children: React.ReactNode }) {

@@ -12,7 +12,8 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { presupuestosService } from '@/services/presupuestos'
 import type { Presupuesto, EstadoPresupuesto } from '@/types'
-import { Plus, Pencil, CheckCircle, ArrowRightCircle, Trash2, ExternalLink } from 'lucide-react'
+import { Plus, Pencil, CheckCircle, ArrowRightCircle, Trash2, ExternalLink, FileDown } from 'lucide-react'
+import { generarPdfPresupuesto } from '@/utils/generarPdf'
 
 const BADGE: Record<EstadoPresupuesto, string> = {
   BORRADOR: 'bg-slate-200 text-slate-700',
@@ -154,21 +155,41 @@ function PresupuestosPage() {
                         </>
                       )}
                       {p.estado === 'CONFIRMADO' && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => navigate('/ventas/nueva', { state: { fromPresupuesto: p } })}
-                        >
-                          <ArrowRightCircle className="h-4 w-4 mr-1 text-green-600" />
-                          Convertir a venta
-                        </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            title="Descargar PDF"
+                            onClick={() => generarPdfPresupuesto(p)}
+                          >
+                            <FileDown className="h-4 w-4 text-slate-500" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => navigate('/ventas/nueva', { state: { fromPresupuesto: p } })}
+                          >
+                            <ArrowRightCircle className="h-4 w-4 mr-1 text-green-600" />
+                            Convertir a venta
+                          </Button>
+                        </>
                       )}
                       {p.estado === 'CONVERTIDO' && (
-                        <Link to="/ventas">
-                          <Button size="sm" variant="ghost" title="Ver venta generada">
-                            <ExternalLink className="h-4 w-4 text-slate-400" />
+                        <>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            title="Descargar PDF"
+                            onClick={() => generarPdfPresupuesto(p)}
+                          >
+                            <FileDown className="h-4 w-4 text-slate-500" />
                           </Button>
-                        </Link>
+                          <Link to="/ventas">
+                            <Button size="sm" variant="ghost" title="Ver venta generada">
+                              <ExternalLink className="h-4 w-4 text-slate-400" />
+                            </Button>
+                          </Link>
+                        </>
                       )}
                     </div>
                   </TableCell>
